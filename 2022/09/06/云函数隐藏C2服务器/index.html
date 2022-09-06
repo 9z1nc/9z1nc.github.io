@@ -24,7 +24,7 @@
 
   
 
-  <title>about | 9z1nc</title>
+  <title>9z1nc</title>
 
   
 
@@ -47,7 +47,7 @@
   <div class="root-container">
     
 <!-- header container -->
-<header class="header-container">
+<header class="header-container post">
   
     <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
   
@@ -97,36 +97,93 @@
 
   
   
-
-  
-  
     <div class="header-content">
-      <div class="post-text layout-block layout-padding">
-        <h1 class="title-wrap">about</h1>
-        
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap"></h1>
+          <h2 class="title-sub-wrap">
+            <strong>John Doe</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-09-06T14:55:35.493Z" itemprop="datePublished">2022-09-06</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+</ul>
+        </div>
       </div>
     </div>
+  
+
+  
   
   
 </header>
 
-    <!-- 分页(其他自定义页面) -->
+    <!-- 文章 -->
 
-<!-- 自定义页面 -->
-
+<!-- 文章内容 -->
 <div class="body-container">
   <article class="content-container layout-block post-container">
     <div class="article-info">
       
+      
+      
+      
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        
+        <h1 id="云函数隐藏C2服务器-（有手就能配置）"><a href="#云函数隐藏C2服务器-（有手就能配置）" class="headerlink" title="云函数隐藏C2服务器 （有手就能配置）"></a>云函数隐藏C2服务器 （有手就能配置）</h1><h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>之前写的一篇文章，以后都往github上提交</p>
+<p>自己踩到的坑点主要就是<br>1、上线地址要去掉http://和:80</p>
+<p>基于CS,隐藏C2服务器的手法有很多，常见如下：</p>
+<ul>
+<li>域前置</li>
+<li>CDN</li>
+<li>第三方代理软件（heroku）</li>
+<li>云函数</li>
+</ul>
+<p>记录一下利用腾讯云的云函数隐藏C2服务器。</p>
+<p>壁画不多说直接开始…</p>
+<h2 id="0x02-环境配置"><a href="#0x02-环境配置" class="headerlink" title="0x02 环境配置"></a>0x02 环境配置</h2><p>需要准备：</p>
+<p>注册腾讯云账号<br>vps一台<br>cs（我用的4.3）<br>1、登陆腾讯云控制台，输入云函数</p>
+<p><img src="%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8FC2%E6%9C%8D%E5%8A%A1%E5%99%A8.assets/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAYXNkYXNkMTIzMTN3cWU=,size_20,color_FFFFFF,t_70,g_se,x_16.png" alt="请添加图片描述"></p>
+
       </section>
 
       
       
+        <nav class="article-nav">
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/09/06/hello-world/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Hello World</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
 
-      
-      
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
     </div>
     <div class="widget-info">
       <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
@@ -163,6 +220,8 @@
     </div>
   </div>
 </section>
+
+      
 
       
 <section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
@@ -208,7 +267,6 @@
     </div>
   </article>
 </div>
-
 
     <!-- footer container -->
 <footer id="footer" class="footer">
